@@ -10,6 +10,12 @@ import Foundation
 
 class ChecklistItem
 {
-    var item: String = ""
+    var text: String = ""
     var checked: Bool = false
+    
+    func Toggle()
+    {
+        checked = !checked
+    }
+    
 }
