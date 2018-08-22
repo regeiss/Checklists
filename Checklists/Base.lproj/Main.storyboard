@@ -77,6 +77,10 @@
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" enablesReturnKeyAutomatically="YES"/>
+                                                    <connections>
+                                                        <action selector="endEdit:" destination="aUd-CO-1xZ" eventType="editingDidEndOnExit" id="zcv-vl-qY0"/>
+                                                        <outlet property="delegate" destination="aUd-CO-1xZ" id="lbc-It-K9c"/>
+                                                    </connections>
                                                 </textField>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -102,6 +106,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="cancelBarButton" destination="jOC-wE-tF9" id="pKX-qD-OTW"/>
+                        <outlet property="doneBarButton" destination="q3w-ti-adx" id="yKc-Us-L7W"/>
                         <outlet property="textField" destination="GKy-11-Zkg" id="VIN-UK-Tle"/>
                     </connections>
                 </tableViewController>
