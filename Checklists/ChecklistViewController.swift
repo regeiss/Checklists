@@ -8,24 +8,25 @@
 
 import UIKit
 
-class ChecklistViewController: UITableViewController
+class ChecklistViewController: UITableViewController, AddItemViewControllerDelegate
 {
-    var items: [ChecklistItem]
+    func addItemViewControllerDidCancel(_ controller: AddItemViewController)
+    {
+        navigationController?.popViewController(animated: true)
+    }
     
-    @IBAction func addButton(_ sender: UIBarButtonItem)
+    func addItemViewController(_ controller: AddItemViewController, didFinishedAdding item: ChecklistItem)
     {
         let newRowIndex = items.count
-        let item = ChecklistItem()
-        item.text = "Novo item"
-        item.checked = false
-        
         items.append(item)
-        
         let indexPath = IndexPath(row: newRowIndex, section: 0)
         let indexPaths = [indexPath]
         tableView.insertRows(at: indexPaths, with: .automatic)
+        navigationController?.popViewController(animated: true)
     }
-
+    
+    var items: [ChecklistItem]
+    
     required init?(coder aDecoder: NSCoder)
     {
         items = [ChecklistItem]()
@@ -78,10 +79,43 @@ class ChecklistViewController: UITableViewController
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = true
     }
-
+    
     override func didReceiveMemoryWarning()
     {
         super.didReceiveMemoryWarning()
+    }
+    
+    @IBAction func addButton(_ sender: UIBarButtonItem)
+    {
+        let newRowIndex = items.count
+        let item = ChecklistItem()
+        item.text = "Novo item"
+        item.checked = false
+        
+        items.append(item)
+        
+        let indexPath = IndexPath(row: newRowIndex, section: 0)
+        let indexPaths = [indexPath]
+        tableView.insertRows(at: indexPaths, with: .automatic)
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.identifier == "AdItem"
+        {
+            let controller = segue.destination as! AddItemViewController
+            controller.delegate = self
+        }
+        else if segue.identifier == "EditItem"
+        {
+            let controller = segue.destination as! AddItemViewController
+            controller.delegate = self
+            
+            if let indexPath = tableView.indexPath(for: sender as! UITableViewCell)
+            {
+                controller.itemToEdit = items[indexPath.row]
+            }
+        }
     }
 
     // Exclui linha da tabela
@@ -134,13 +168,16 @@ class ChecklistViewController: UITableViewController
 
     func configureCheckmark(for cell: UITableViewCell, with item: ChecklistItem)
     {
+        // Cria variavel para o label de checkmark
+        let label = cell.viewWithTag(1001) as! UILabel
+        
         if item.checked
         {
-            cell.accessoryType = .checkmark
+            label.text = "√"
         }
         else
         {
-            cell.accessoryType = .none
+           label.text = ""
         }
     }
 }
