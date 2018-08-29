@@ -8,13 +8,14 @@
 
 import UIKit
 
-protocol AddItemViewControllerDelegate: class
+protocol ItemDetailViewControllerDelegate: class
 {
-    func addItemViewControllerDidCancel(_ controller: AddItemViewController)
-    func addItemViewController(_ controller: AddItemViewController, didFinishedAdding item: ChecklistItem)
+    func addEditViewControllerDidCancel(_ controller: ItemDetailViewController)
+    func addDetailViewController(_ controller: ItemDetailViewController, didFinishedAdding item: ChecklistItem)
+    func addDetailViewController(_ controller: ItemDetailViewController, didFinishedEditing item: ChecklistItem)
 }
 
-class AddItemViewController: UITableViewController, UITextFieldDelegate
+class ItemDetailViewController: UITableViewController, UITextFieldDelegate
 {
 
     @IBOutlet weak var textField: UITextField!
@@ -22,7 +23,7 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate
     @IBOutlet weak var cancelBarButton: UIBarButtonItem!
     var itemToEdit: ChecklistItem?
     
-    weak var delegate: AddItemViewControllerDelegate?
+    weak var delegate: ItemDetailViewControllerDelegate?
     
     override func viewDidLoad()
     {
@@ -37,33 +38,35 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate
         }
     }
     
-    /*func textFieldShouldReturn(_ textField: UITextField) -> Bool
-    {
-        textField.resignFirstResponder()
-        return false
-    }
-    */
     // Fecha a view
     @IBAction func cancel(_ sender: UIBarButtonItem)
     {
         navigationController?.popViewController(animated: true)
-        delegate?.addItemViewControllerDidCancel(self)
+        delegate?.addEditViewControllerDidCancel(self)
     }
     @IBAction func endEdit(_ sender: UITextField)
     {
         let item = ChecklistItem()
         item.text = textField.text!
         item.checked = false
-        delegate?.addItemViewController(self, didFinishedAdding: item)
+        delegate?.addDetailViewController(self, didFinishedAdding: item)
     }
     
     // Fecha a view
     @IBAction func done(_ sender: UIBarButtonItem)
     {
-        let item = ChecklistItem()
-        item.text = textField.text!
-        item.checked = false
-        delegate?.addItemViewController(self, didFinishedAdding: item)
+        if let itemToEdit = itemToEdit
+        {
+            itemToEdit.text = textField.text!
+            delegate?.addDetailViewController(self, didFinishedEditing: itemToEdit)
+        }
+        else
+        {
+            let item = ChecklistItem()
+            item.text = textField.text!
+            item.checked = false
+            delegate?.addDetailViewController(self, didFinishedAdding: item)
+        }
     }
     
     // Evita selecao da linha
