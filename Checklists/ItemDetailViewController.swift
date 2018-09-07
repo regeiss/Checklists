@@ -8,12 +8,12 @@
 
 import UIKit
 
-protocol ItemDetailViewControllerDelegate: class
-{
-    func addEditViewControllerDidCancel(_ controller: ItemDetailViewController)
-    func addDetailViewController(_ controller: ItemDetailViewController, didFinishedAdding item: ChecklistItem)
-    func addDetailViewController(_ controller: ItemDetailViewController, didFinishedEditing item: ChecklistItem)
+protocol ItemDetailViewControllerDelegate: class {
+    func addItemViewControllerDidCancel(_ controller: ItemDetailViewController)
+    func addItemViewController(_ controller: ItemDetailViewController, didFinishAdding item: ChecklistItem)
+    func addItemViewController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem)
 }
+
 
 class ItemDetailViewController: UITableViewController, UITextFieldDelegate
 {
@@ -42,33 +42,33 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate
     @IBAction func cancel(_ sender: UIBarButtonItem)
     {
         navigationController?.popViewController(animated: true)
-        delegate?.addEditViewControllerDidCancel(self)
+        delegate?.addItemViewControllerDidCancel(self)
     }
     @IBAction func endEdit(_ sender: UITextField)
     {
         let item = ChecklistItem()
         item.text = textField.text!
         item.checked = false
-        delegate?.addDetailViewController(self, didFinishedAdding: item)
+        delegate?.addItemViewController(self, didFinishEditing: itemToEdit!)
     }
-    
-    // Fecha a view
+
+   // Fecha a view
     @IBAction func done(_ sender: UIBarButtonItem)
     {
         if let itemToEdit = itemToEdit
         {
             itemToEdit.text = textField.text!
-            delegate?.addDetailViewController(self, didFinishedEditing: itemToEdit)
+            delegate?.addItemViewController(self, didFinishEditing: itemToEdit)
         }
         else
         {
             let item = ChecklistItem()
             item.text = textField.text!
             item.checked = false
-            delegate?.addDetailViewController(self, didFinishedAdding: item)
+            delegate?.addItemViewController(self, didFinishAdding: item)
         }
+        navigationController?.popViewController(animated: true)
     }
-    
     // Evita selecao da linha
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath?
     {
@@ -95,9 +95,4 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate
         }
         return true
     }
-    /*func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-
-    }
-*/
 }

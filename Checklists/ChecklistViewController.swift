@@ -10,12 +10,13 @@ import UIKit
 
 class ChecklistViewController: UITableViewController, ItemDetailViewControllerDelegate
 {
-    func addEditViewControllerDidCancel(_ controller: ItemDetailViewController)
+    
+    func addItemViewControllerDidCancel(_ controller: ItemDetailViewController)
     {
         navigationController?.popViewController(animated: true)
     }
     
-    func addDetailViewController(_ controller: ItemDetailViewController, didFinishedEditing item: ChecklistItem)
+    func addItemViewController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem)
     {
         if let index = items.index(of: item)
         {
@@ -27,14 +28,13 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
         }
     }
     
-    func addDetailViewController(_ controller: ItemDetailViewController, didFinishedAdding item: ChecklistItem)
+    func addItemViewController(_ controller: ItemDetailViewController, didFinishAdding item: ChecklistItem)
     {
         let newRowIndex = items.count
         items.append(item)
         let indexPath = IndexPath(row: newRowIndex, section: 0)
         let indexPaths = [indexPath]
         tableView.insertRows(at: indexPaths, with: .automatic)
-        navigationController?.popViewController(animated: true)
         navigationController?.popViewController(animated: true)
     }
     
